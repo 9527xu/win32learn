@@ -144,6 +144,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+    //message标识哪种消息
     switch (message)
     {
     case WM_COMMAND:
@@ -168,6 +169,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
             // TODO: 在此处添加使用 hdc 的任何绘图代码...
+            cout << "i change";
             EndPaint(hWnd, &ps);
         }
         break;
@@ -177,17 +179,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         //lParam:鼠标光标位置
         if (wParam == SC_CLOSE)
         {
-           // MessageBox(hWnd,)
+            MessageBox(hWnd,//所属的窗口句柄
+                L"hello world",//内容
+                L"hello",//标题
+                MB_OKCANCEL//提示框类型
+            );
         }
+        break;
     case WM_DESTROY:
         //进程销毁前触发,由DefWindowProc调用，类似析构函数，一般用于善后如资源，内存（但仅限于一般，你可以搞些别的如表白程序，不让它退出）
         //wParam：0 lParam：0
         PostQuitMessage(0);//让GetMessage()返回0，退出程序
         break;
+    case WM_SIZE:
+        cout << "i change";
+        break;
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);//自己不想处理的消息交给系统处理
+        return DefWindowProc(hWnd, message, wParam, lParam);//自己不想处理的函数，让window默认处理，窗口的销毁就是交给这个处理的
     }
-    return 0;
+    return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 // “关于”框的消息处理程序。
