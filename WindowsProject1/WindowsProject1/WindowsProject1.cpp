@@ -50,11 +50,15 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     MSG msg;
 
     // 主消息循环:
-    while (GetMessage(&msg, nullptr, 0, 0))
+    while (GetMessage(&msg,//获取到的消息
+        nullptr,//窗口句柄，只抓取指定窗口的消息
+        0,//获取消息的最小id 
+        0//获取消息的最大id
+    ))//nullptr,0,0表示该进程的所有窗口消息都抓，不做任何限制
     {
         if (!TranslateAccelerator(msg.hwnd, hAccelTable, &msg))
         {
-            TranslateMessage(&msg);
+            TranslateMessage(&msg);//判断按键消息即a-z,判断是大写还是小写
             DispatchMessage(&msg);
         }
     }
@@ -167,11 +171,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             EndPaint(hWnd, &ps);
         }
         break;
+    case WM_SYSCOMMAND:
+        //产生时间：点击窗口最大化，最小化，关闭按钮等、
+        //wParam:具体点击操作，例如关闭SC_CLOSE等
+        //lParam:鼠标光标位置
+        if (wParam == SC_CLOSE)
+        {
+           // MessageBox(hWnd,)
+        }
     case WM_DESTROY:
-        PostQuitMessage(0);
+        //进程销毁前触发,由DefWindowProc调用，类似析构函数，一般用于善后如资源，内存（但仅限于一般，你可以搞些别的如表白程序，不让它退出）
+        //wParam：0 lParam：0
+        PostQuitMessage(0);//让GetMessage()返回0，退出程序
         break;
     default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+        return DefWindowProc(hWnd, message, wParam, lParam);//自己不想处理的消息交给系统处理
     }
     return 0;
 }
